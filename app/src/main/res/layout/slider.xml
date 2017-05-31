@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ademar.phasedseekbar.PhasedSeekBar
+        android:id="@+id/psb_hor"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        app:phased_anchor_height="@dimen/test_anchor_size"
+        app:phased_anchor_width="@dimen/test_anchor_size"
+        app:phased_base_background="#000000"
+        app:phased_base_margin_bottom="@dimen/test_bottom_padding"
+        app:phased_base_margin_left="@dimen/test_left_padding"
+        app:phased_base_margin_right="@dimen/test_right_padding"
+        app:phased_base_margin_top="@dimen/test_top_padding"
+        app:phased_item_height="@dimen/test_item_size"
+        app:phased_item_width="@dimen/test_item_size"
+        app:phased_mode="horizontal"/>
+
+</LinearLayout>
