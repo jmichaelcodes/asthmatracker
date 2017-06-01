@@ -133,6 +133,18 @@
 
             </android.support.design.widget.TextInputLayout>
 
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="25dp"
+                    android:hint="Log Email Time"
+                    android:id="@+id/email_time"
+                    android:inputType="textEmailAddress"
+                    android:clickable="true"
+                    android:focusableInTouchMode="false"
+                    />
+
             <Button android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:id="@+id/add_child"
