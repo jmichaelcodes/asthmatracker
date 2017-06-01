@@ -1,5 +1,7 @@
 package com.jmichaelcodes.asthmatrackerkids;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,12 +29,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import flow.Flow;
+
+import static android.R.attr.type;
 
 /**
  * Created by docto_000 on 6/30/2016.
@@ -50,6 +55,7 @@ public class LogActivity extends ActionBarActivity {
     private Child currentChild;
     private String parentEmail;
     private SharedPreferences mPrefs;
+    private PendingIntent pendingIntent;
 
     private Flow flow;
     private Context context;
@@ -77,6 +83,7 @@ public class LogActivity extends ActionBarActivity {
         loadEmail();
         sendEmail();
         logEmail();
+        setLogTime();
 
 
         adapter = new LogAdapter(LogActivity.this, R.layout.log_list_item, childEntries);
@@ -264,6 +271,27 @@ public class LogActivity extends ActionBarActivity {
         }
 
         return typeString;
+    }
+
+    public void setLogTime() {
+        Calendar calendar = Calendar.getInstance();
+
+        GregorianCalendar twopm = new GregorianCalendar();
+        twopm.set(GregorianCalendar.HOUR_OF_DAY, 20);
+        twopm.set(GregorianCalendar.MINUTE, 00);
+        twopm.set(GregorianCalendar.SECOND, 0);
+        twopm.set(GregorianCalendar.MILLISECOND, 0);
+        if(twopm.before(new GregorianCalendar())){
+            twopm.add(GregorianCalendar.DAY_OF_MONTH, 1);
+        }
+
+        Intent myIntent = new Intent(LogActivity.this, LogReciever.class);
+        pendingIntent = PendingIntent.getBroadcast(LogActivity.this, 0, myIntent,0);
+
+        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, twopm.getTimeInMillis(), 1000*60*60*24, pendingIntent);
+
+
     }
 
 }
