@@ -18,6 +18,7 @@ import com.jmichaelcodes.asthmatrackerkids.Models.Entries;
 import com.jmichaelcodes.asthmatrackerkids.Models.Entry;
 import com.jmichaelcodes.asthmatrackerkids.R;
 
+import java.sql.SQLOutput;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.concurrent.locks.Condition;
 
 /**
  * Created by doctorj89 on 5/31/17.
@@ -64,16 +66,18 @@ public class NotificationService extends Service {
         super.onStart(intent, startId);
 
         mManager = (NotificationManager) this.getApplicationContext().getSystemService(this.getApplicationContext().NOTIFICATION_SERVICE);
-        Intent intent1 = new Intent(this.getApplicationContext(), MainActivity.class);
+        Intent intent1 = new Intent(this.getApplicationContext(), ConditionActivity.class);
 
-        Notification notification = new Notification(R.mipmap.ic_launcher, "This is a test message!", System.currentTimeMillis());
+        Notification notification = new Notification(R.mipmap.ic_launcher, "It's time to use your peak flow meter", System.currentTimeMillis());
         intent1.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         PendingIntent pendingNotificationIntent = PendingIntent.getActivity(this.getApplicationContext(), 0, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
-        notification.setLatestEventInfo(this.getApplicationContext(), "AlarmManagerDemo", "This is a test message!", pendingNotificationIntent);
+        notification.setLatestEventInfo(this.getApplicationContext(), "Asthma Tracker", "It's time to use your peak flow meter", pendingNotificationIntent);
 
         mManager.notify(0, notification);
+
+        System.out.println("notification launched");
     }
 
     @Override

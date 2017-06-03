@@ -127,9 +127,9 @@ public class AddChildActivity extends ActionBarActivity {
 
                     switch(hour){
 
-                        case 0:
+                        case 12:
                             hourString = "12";
-                            suffix = "am";
+                            suffix = "pm";
                             break;
                         case 13:
                             hourString = "1";

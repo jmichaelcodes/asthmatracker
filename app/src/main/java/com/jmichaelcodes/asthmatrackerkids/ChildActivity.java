@@ -1,5 +1,7 @@
 package com.jmichaelcodes.asthmatrackerkids;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,6 +28,8 @@ import com.jmichaelcodes.asthmatrackerkids.Models.Parent;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -49,8 +53,10 @@ public class ChildActivity extends AppCompatActivity {
     public static Parent currentParent;
     public SharedPreferences mPrefs;
     public static Boolean fromAdd = false;
-
     public static Child currentChild;
+    private PendingIntent morningIntent;
+    private PendingIntent eveningIntent;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +100,8 @@ public class ChildActivity extends AppCompatActivity {
             child_name.setText(currentChild.getChildName());
             prefsEditor.putString("child", json);
             prefsEditor.commit();
+            setMorningTime();
+            setEveningTime();
         }
     }
 
@@ -135,5 +143,43 @@ public class ChildActivity extends AppCompatActivity {
                 removeChildDialog.show();
             }
         });
+    }
+
+    public void setMorningTime() {
+        GregorianCalendar morningTime = new GregorianCalendar();
+        morningTime.set(GregorianCalendar.HOUR_OF_DAY, currentChild.getPfmMorningHour());
+        morningTime.set(GregorianCalendar.MINUTE, currentChild.getPfmMorningMinute());
+        morningTime.set(GregorianCalendar.SECOND, 0);
+        morningTime.set(GregorianCalendar.MILLISECOND, 0);
+        if(morningTime.before(new GregorianCalendar())){
+            morningTime.add(GregorianCalendar.DAY_OF_MONTH, 1);
+        }
+
+        Intent myIntent = new Intent(ChildActivity.this, NotificationReceiver.class);
+        morningIntent = PendingIntent.getBroadcast(ChildActivity.this, 0, myIntent,0);
+
+        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, morningTime.getTimeInMillis(), 1000*60*60*24, morningIntent);
+
+
+    }
+
+    public void setEveningTime() {
+        GregorianCalendar eveningTime = new GregorianCalendar();
+        eveningTime.set(GregorianCalendar.HOUR_OF_DAY, currentChild.getPfmEveningHour());
+        eveningTime.set(GregorianCalendar.MINUTE, currentChild.getPfmEveningMinute());
+        eveningTime.set(GregorianCalendar.SECOND, 0);
+        eveningTime.set(GregorianCalendar.MILLISECOND, 0);
+        if(eveningTime.before(new GregorianCalendar())){
+            eveningTime.add(GregorianCalendar.DAY_OF_MONTH, 1);
+        }
+
+        Intent myIntent = new Intent(ChildActivity.this, NotificationReceiver.class);
+        eveningIntent = PendingIntent.getBroadcast(ChildActivity.this, 1, myIntent,0);
+
+        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, eveningTime.getTimeInMillis(), 1000*60*60*24, eveningIntent);
+
+
     }
 }

@@ -51,8 +51,6 @@ public class LogActivity extends ActionBarActivity {
     private Child currentChild;
     private String parentEmail;
     private SharedPreferences mPrefs;
-    private PendingIntent pendingIntent;
-
     private Flow flow;
     private Context context;
     final String TAG = "AltDB LoginView";
@@ -79,8 +77,6 @@ public class LogActivity extends ActionBarActivity {
         loadEmail();
         sendEmail();
         logEmail();
-        setLogTime();
-
 
         adapter = new LogAdapter(LogActivity.this, R.layout.log_list_item, childEntries);
 
@@ -267,27 +263,6 @@ public class LogActivity extends ActionBarActivity {
         }
 
         return typeString;
-    }
-
-    public void setLogTime() {
-        Calendar calendar = Calendar.getInstance();
-
-        GregorianCalendar twopm = new GregorianCalendar();
-        twopm.set(GregorianCalendar.HOUR_OF_DAY, 20);
-        twopm.set(GregorianCalendar.MINUTE, 00);
-        twopm.set(GregorianCalendar.SECOND, 0);
-        twopm.set(GregorianCalendar.MILLISECOND, 0);
-        if(twopm.before(new GregorianCalendar())){
-            twopm.add(GregorianCalendar.DAY_OF_MONTH, 1);
-        }
-
-        Intent myIntent = new Intent(LogActivity.this, NotificationReceiver.class);
-        pendingIntent = PendingIntent.getBroadcast(LogActivity.this, 0, myIntent,0);
-
-        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, twopm.getTimeInMillis(), 1000*60*60*24, pendingIntent);
-
-
     }
 
 }
