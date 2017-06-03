@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.jmichaelcodes.asthmatrackerkids.Models.Child;
 
 import java.sql.SQLOutput;
@@ -52,6 +53,9 @@ public class AddChildActivity extends ActionBarActivity {
     private String hourString;
     private String minuteString;
     private String formattedTime;
+    private Child existingChild;
+    private String incomingAm;
+    private String incomingPm;
 
     static final int TIME_DIALOG_ID = 999;
 
@@ -72,6 +76,7 @@ public class AddChildActivity extends ActionBarActivity {
 
         addChild();
         timeDialog();
+        fillValues();
 
     }
 
@@ -125,109 +130,14 @@ public class AddChildActivity extends ActionBarActivity {
                     hour = selectedHour;
                     minute = selectedMinute;
 
-                    switch(hour){
-
-                        case 12:
-                            hourString = "12";
-                            suffix = "pm";
-                            break;
-                        case 13:
-                            hourString = "1";
-                            suffix = "pm";
-                            break;
-                        case 14:
-                            hourString = "2";
-                            suffix = "pm";
-                            break;
-                        case 15:
-                            hourString = "3";
-                            suffix = "pm";
-                            break;
-                        case 16:
-                            hourString = "4";
-                            suffix = "pm";
-                            break;
-                        case 17:
-                            hourString = "5";
-                            suffix = "pm";
-                            break;
-                        case 18:
-                            hourString = "6";
-                            suffix = "pm";
-                            break;
-                        case 19:
-                            hourString = "7";
-                            suffix = "pm";
-                            break;
-                        case 20:
-                            hourString = "8";
-                            suffix = "pm";
-                            break;
-                        case 21:
-                            hourString = "9";
-                            suffix = "pm";
-                            break;
-                        case 22:
-                            hourString = "10";
-                            suffix = "pm";
-                            break;
-                        case 23:
-                            hourString = "11";
-                            suffix = "pm";
-                            break;
-                        default:
-                            hourString = String.valueOf(hour);
-                            suffix = "am";
-                            break;
-                    }
-
-                    switch(minute){
-
-                        case 0:
-                            minuteString = "00";
-                            break;
-                        case 1:
-                            minuteString = "01";
-                            break;
-                        case 2:
-                            minuteString = "02";
-                            break;
-                        case 3:
-                            minuteString = "03";
-                            break;
-                        case 4:
-                            minuteString = "04";
-                            break;
-                        case 5:
-                            minuteString = "05";
-                            break;
-                        case 6:
-                            minuteString = "06";
-                            break;
-                        case 7:
-                            minuteString = "07";
-                            break;
-                        case 8:
-                            minuteString = "08";
-                            break;
-                        case 9:
-                            minuteString = "09";
-                            break;
-                        default:
-                            minuteString = String.valueOf(minute);
-                            break;
-                    }
-
-                    formattedTime = hourString + ":" + minuteString + suffix;
-
                     if (isAm) {
                         morningHour = hour;
                         morningMinute = minute;
-                        peak_flow_am.setText(formattedTime);
+                        peak_flow_am.setText(timeSwitch(hour, minute, formattedTime));
                     } else {
                         eveningHour = hour;
                         eveningMinute = minute;
-                        peak_flow_pm.setText(formattedTime);
+                        peak_flow_pm.setText(timeSwitch(hour, minute, formattedTime));
                     }
 
                     System.out.println("time " + formattedTime);
@@ -236,6 +146,29 @@ public class AddChildActivity extends ActionBarActivity {
 
                 }
             };
+
+    public void fillValues() {
+        try {
+            Gson gson = new Gson();
+            System.out.println("try child prefs " + mPrefs.getString("child", ""));
+            System.out.println("try current child " + existingChild);
+            String json = mPrefs.getString("child", "");
+            existingChild = gson.fromJson(json, Child.class);
+            add_child.setText("Edit Child");
+            morningHour = existingChild.getPfmMorningHour();
+            morningMinute = existingChild.getPfmMorningMinute();
+            eveningHour = existingChild.getPfmEveningHour();
+            eveningMinute = existingChild.getPfmEveningMinute();
+            dialog_child_name.setText(existingChild.getChildName());
+            dialog_phone.setText(existingChild.getPhone());
+            dialog_email.setText(existingChild.getEmail());
+            peak_flow_am.setText(timeSwitch(existingChild.getPfmMorningHour(), existingChild.getPfmMorningMinute(), incomingAm));
+            peak_flow_pm.setText(timeSwitch(existingChild.getPfmEveningHour(), existingChild.getPfmEveningMinute(), incomingPm));
+
+        } catch (Exception e) {
+
+        }
+    }
 
 
     public void addChild() {
@@ -260,6 +193,107 @@ public class AddChildActivity extends ActionBarActivity {
                 }
             }
         });
+    }
+
+    public String timeSwitch(Integer hour, Integer minute, String formattedTimeString) {
+        switch(hour){
+
+            case 0:
+                hourString = "12";
+                suffix = "am";
+                break;
+            case 12:
+                hourString = "12";
+                suffix = "pm";
+                break;
+            case 13:
+                hourString = "1";
+                suffix = "pm";
+                break;
+            case 14:
+                hourString = "2";
+                suffix = "pm";
+                break;
+            case 15:
+                hourString = "3";
+                suffix = "pm";
+                break;
+            case 16:
+                hourString = "4";
+                suffix = "pm";
+                break;
+            case 17:
+                hourString = "5";
+                suffix = "pm";
+                break;
+            case 18:
+                hourString = "6";
+                suffix = "pm";
+                break;
+            case 19:
+                hourString = "7";
+                suffix = "pm";
+                break;
+            case 20:
+                hourString = "8";
+                suffix = "pm";
+                break;
+            case 21:
+                hourString = "9";
+                suffix = "pm";
+                break;
+            case 22:
+                hourString = "10";
+                suffix = "pm";
+                break;
+            case 23:
+                hourString = "11";
+                suffix = "pm";
+                break;
+            default:
+                hourString = String.valueOf(hour);
+                suffix = "am";
+                break;
+        }
+
+        switch(minute){
+
+            case 0:
+                minuteString = "00";
+                break;
+            case 1:
+                minuteString = "01";
+                break;
+            case 2:
+                minuteString = "02";
+                break;
+            case 3:
+                minuteString = "03";
+                break;
+            case 4:
+                minuteString = "04";
+                break;
+            case 5:
+                minuteString = "05";
+                break;
+            case 6:
+                minuteString = "06";
+                break;
+            case 7:
+                minuteString = "07";
+                break;
+            case 8:
+                minuteString = "08";
+                break;
+            case 9:
+                minuteString = "09";
+                break;
+            default:
+                minuteString = String.valueOf(minute);
+                break;
+        }
+
+        return hourString + ":" + minuteString + suffix;
     }
 
     public void dialog(String message) {

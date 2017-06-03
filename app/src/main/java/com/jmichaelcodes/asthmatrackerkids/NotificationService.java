@@ -35,18 +35,6 @@ import java.util.concurrent.locks.Condition;
 public class NotificationService extends Service {
 
     private NotificationManager mManager;
-    public static List<Entry> entries = new ArrayList<>();
-    public static Entries childEntriesModel = new Entries();
-    private ArrayList<Entry> childEntries = new ArrayList<>();
-    public static Entry currentEntry;
-    public String logStart;
-    public String logEnd;
-    public String logWhole;
-    public ArrayList<String> logEnds = new ArrayList<>();
-    private Child currentChild;
-    private String parentEmail;
-    private SharedPreferences mPrefs;
-    private PendingIntent pendingIntent;
 
     @Override
     public IBinder onBind(Intent arg0) {
