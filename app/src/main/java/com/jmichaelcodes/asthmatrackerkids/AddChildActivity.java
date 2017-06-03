@@ -38,10 +38,16 @@ public class AddChildActivity extends ActionBarActivity {
     private TextView dialog_phone;
     private TextView dialog_email;
     private Button add_child;
-    private EditText email_time;
+    private EditText peak_flow_am;
+    private EditText peak_flow_pm;
+    private Boolean isAm;
     private TimePicker time_picker;
     private int hour;
     private int minute;
+    private Integer morningHour;
+    private Integer morningMinute;
+    private Integer eveningHour;
+    private Integer eveningMinute;
     private String suffix;
     private String hourString;
     private String minuteString;
@@ -59,10 +65,10 @@ public class AddChildActivity extends ActionBarActivity {
         dialog_child_name = (TextView) findViewById(R.id.dialog_child_name);
         dialog_phone = (TextView) findViewById(R.id.dialog_phone);
         dialog_email = (TextView) findViewById(R.id.dialog_email);
+        peak_flow_am = (EditText) findViewById(R.id.peak_flow_am);
+        peak_flow_pm = (EditText) findViewById(R.id.peak_flow_pm);
 
-
-
-       mPrefs = this.getSharedPreferences("prefs", context.MODE_PRIVATE);
+        mPrefs = this.getSharedPreferences("prefs", context.MODE_PRIVATE);
 
         addChild();
         timeDialog();
@@ -71,18 +77,32 @@ public class AddChildActivity extends ActionBarActivity {
 
     public void timeDialog() {
 
-        email_time = (EditText) findViewById(R.id.email_time);
-
-        email_time.setOnClickListener(new View.OnClickListener() {
+        peak_flow_am.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
+
+                isAm = true;
 
                 showDialog(TIME_DIALOG_ID);
 
             }
 
         });
+
+        peak_flow_pm.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                isAm = false;
+
+                showDialog(TIME_DIALOG_ID);
+
+            }
+
+        });
+
 
     }
 
@@ -200,6 +220,16 @@ public class AddChildActivity extends ActionBarActivity {
 
                     formattedTime = hourString + ":" + minuteString + suffix;
 
+                    if (isAm) {
+                        morningHour = hour;
+                        morningMinute = minute;
+                        peak_flow_am.setText(formattedTime);
+                    } else {
+                        eveningHour = hour;
+                        eveningMinute = minute;
+                        peak_flow_pm.setText(formattedTime);
+                    }
+
                     System.out.println("time " + formattedTime);
 
 
@@ -214,27 +244,34 @@ public class AddChildActivity extends ActionBarActivity {
             public void onClick(View v) {
                 ChildActivity.fromAdd = true;
 
-                if (dialog_phone.getText().length() == 10) {
+                if (dialog_phone.getText().length() != 10) {
+                    dialog("You must enter a valid phone number");
+                } else if (morningHour == null || eveningHour == null) {
+                    dialog("You must enter peak flow times");
+                } else {
                     String childName = dialog_child_name.getText().toString();
                     String childPhone = dialog_phone.getText().toString();
                     String childEmail = dialog_email.getText().toString();
-                    Child tempChild = new Child(childName, childPhone, childEmail);
+                    Child tempChild = new Child(childName, childPhone, childEmail, morningHour, morningMinute, eveningHour, eveningMinute);
+                    System.out.println("morning/evening ints " + morningHour + " " + morningMinute + " " + eveningHour + " " + eveningMinute);
                     ChildActivity.currentChild = tempChild;
                     Intent myIntent = new Intent(AddChildActivity.this, ChildActivity.class);
                     AddChildActivity.this.startActivity(myIntent);
-                } else {
-                    AlertDialog alertDialog = new AlertDialog.Builder(AddChildActivity.this).create();
-                    alertDialog.setMessage("You must enter a valid phone number");
-                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                    alertDialog.show();
                 }
             }
         });
+    }
+
+    public void dialog(String message) {
+        AlertDialog alertDialog = new AlertDialog.Builder(AddChildActivity.this).create();
+        alertDialog.setMessage(message);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
     }
 
     private Boolean isNumber(String string) {

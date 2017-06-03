@@ -8,7 +8,10 @@ public class Child {
     private String childName;
     private String phone;
     private String email;
-    private Integer dailyCheckIns;
+    private Integer pfmMorningHour;
+    private Integer pfmMorningMinute;
+    private Integer pfmEveningHour;
+    private Integer pfmEveningMinute;
 
     public String getChildName() {
         return childName;
@@ -34,20 +37,47 @@ public class Child {
         this.email = email;
     }
 
-    public Integer getDailyCheckIns() {
-        return dailyCheckIns;
+    public Integer getPfmMorningHour() {
+        return pfmMorningHour;
     }
 
-    public void setDailyCheckIns(Integer dailyCheckIns) {
-        this.dailyCheckIns = dailyCheckIns;
+    public void setPfmMorningHour(Integer pfmMorningHour) {
+        this.pfmMorningHour = pfmMorningHour;
     }
-//    public ArrayList<Child> children = new ArrayList<>();
 
-    public Child(String childName, String phone, String email) {
+    public Integer getPfmMorningMinute() {
+        return pfmMorningMinute;
+    }
+
+    public void setPfmMorningMinute(Integer pfmMorningMinute) {
+        this.pfmMorningMinute = pfmMorningMinute;
+    }
+
+    public Integer getPfmEveningHour() {
+        return pfmEveningHour;
+    }
+
+    public void setPfmEveningHour(Integer pfmEveningHour) {
+        this.pfmEveningHour = pfmEveningHour;
+    }
+
+    public Integer getPfmEveningMinute() {
+        return pfmEveningMinute;
+    }
+
+    public void setPfmEveningMinute(Integer pfmEveningMinute) {
+        this.pfmEveningMinute = pfmEveningMinute;
+    }
+
+    public Child(String childName, String phone, String email, Integer pfmMorningHour, Integer pfmMorningMinute, Integer pfmEveningHour, Integer pfmEveningMinute) {
         this.childName = childName;
         this.phone = phone;
         this.email = email;
-        this.dailyCheckIns = dailyCheckIns;
+        this.pfmMorningHour = pfmMorningHour;
+        this.pfmMorningMinute = pfmMorningMinute;
+        this.pfmEveningHour = pfmEveningHour;
+        this.pfmEveningMinute = pfmEveningMinute;
     }
+
 
 }

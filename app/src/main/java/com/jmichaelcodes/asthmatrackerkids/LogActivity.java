@@ -33,11 +33,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import flow.Flow;
-
-import static android.R.attr.type;
 
 /**
  * Created by docto_000 on 6/30/2016.
@@ -261,7 +257,7 @@ public class LogActivity extends ActionBarActivity {
                 typeString = "Peak Flow";
                 break; //optional
             case 1 :
-                typeString = "How are you?";
+                typeString = "Breathing";
                 break; //optional
             case 2 :
                 typeString = "Attack";
@@ -285,7 +281,7 @@ public class LogActivity extends ActionBarActivity {
             twopm.add(GregorianCalendar.DAY_OF_MONTH, 1);
         }
 
-        Intent myIntent = new Intent(LogActivity.this, LogReciever.class);
+        Intent myIntent = new Intent(LogActivity.this, NotificationReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(LogActivity.this, 0, myIntent,0);
 
         AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
